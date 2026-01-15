@@ -25,7 +25,7 @@ func setupTestRepo(t *testing.T) string {
 	dir := resolvePath(t, t.TempDir())
 
 	cmds := [][]string{
-		{"git", "init"},
+		{"git", "init", "-b", "main"},
 		{"git", "config", "user.email", "test@example.com"},
 		{"git", "config", "user.name", "Test User"},
 	}
