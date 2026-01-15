@@ -30,3 +30,9 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# AI Agents
+.claude/
+
+# Build File
+git-wt-detach
