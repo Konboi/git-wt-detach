@@ -15,15 +15,15 @@ const version = "0.1.0"
 func main() {
 	opts := &wtdetach.Options{}
 
-	flag.BoolVar(&opts.DryRun, "dry-run", false, "処理内容のみを表示し、実際の変更は行わない")
-	flag.BoolVar(&opts.Revert, "revert", false, "一時退避を元に戻す")
-	flag.BoolVar(&opts.Force, "force", false, "未コミット変更が存在しても強制実行する")
-	flag.BoolVar(&opts.Yes, "yes", false, "確認プロンプトをスキップする")
-	showVersion := flag.Bool("version", false, "バージョンを表示")
+	flag.BoolVar(&opts.DryRun, "dry-run", false, "Show what would be done without making changes")
+	flag.BoolVar(&opts.Revert, "revert", false, "Revert the temporary detach")
+	flag.BoolVar(&opts.Force, "force", false, "Force execution even with uncommitted changes")
+	flag.BoolVar(&opts.Yes, "yes", false, "Skip confirmation prompt")
+	showVersion := flag.Bool("version", false, "Show version")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: git wt-detach <branch> [options]\n\n")
-		fmt.Fprintf(os.Stderr, "Git worktree で他ディレクトリに checkout されているブランチを一時的に退避させます。\n\n")
+		fmt.Fprintf(os.Stderr, "Temporarily detach a branch checked out in another worktree.\n\n")
 		fmt.Fprintf(os.Stderr, "Options:\n")
 		flag.PrintDefaults()
 	}
