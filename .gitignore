@@ -35,4 +35,4 @@ go.work.sum
 .claude/
 
 # Build File
-git-wt-detach
+# git-wt-detach
