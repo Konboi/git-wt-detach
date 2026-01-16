@@ -1,0 +1,12 @@
+# tagpr configuration
+# https://github.com/Songmu/tagpr
+
+[tagpr]
+# Version file to update (Go style)
+versionFile = "cmd/git-wt-detach/main.go"
+
+# Release branch
+releaseBranch = "main"
+
+# Version prefix
+vPrefix = true
