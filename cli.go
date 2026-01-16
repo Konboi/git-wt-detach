@@ -11,16 +11,30 @@ import (
 
 // CLI defines the command-line interface
 type CLI struct {
-	Branch  string           `arg:"" help:"Branch name to detach or revert."`
+	Branch  string           `arg:"" optional:"" help:"Branch name to detach or revert."`
 	DryRun  bool             `help:"Show what would be done without making changes." short:"n"`
 	Revert  bool             `help:"Revert the temporary detach." short:"r"`
 	Force   bool             `help:"Force execution even with uncommitted changes." short:"f"`
 	Yes     bool             `help:"Skip confirmation prompt." short:"y"`
+	Init    string           `help:"Output shell completion script (bash, zsh, fish)." placeholder:"SHELL"`
 	Version kong.VersionFlag `help:"Show version."`
 }
 
 // Run executes the CLI command
 func (c *CLI) Run() error {
+	if c.Init != "" {
+		script, err := CompletionScript(c.Init)
+		if err != nil {
+			return err
+		}
+		fmt.Print(script)
+		return nil
+	}
+
+	if c.Branch == "" {
+		return fmt.Errorf("branch name is required")
+	}
+
 	d := NewDetacher()
 	d.LoadSuffixFromConfig()
 

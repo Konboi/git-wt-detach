@@ -58,7 +58,36 @@ git wt-detach <branch> --revert
 | `--force` | Force execution even with uncommitted changes |
 | `--yes` | Skip confirmation prompt |
 | `--revert` | Revert the temporary detach |
+| `--init` | Output shell completion script (bash, zsh, fish) |
 | `--version` | Show version |
+
+## Shell Integration
+
+Enable tab completion for branch names:
+
+**Zsh:**
+
+```bash
+eval "$(git-wt-detach --init zsh)"
+```
+
+Add to your `~/.zshrc` for persistent completion.
+
+**Bash:**
+
+```bash
+eval "$(git-wt-detach --init bash)"
+```
+
+Add to your `~/.bashrc` for persistent completion.
+
+**Fish:**
+
+```bash
+git-wt-detach --init fish | source
+```
+
+Add to your `~/.config/fish/config.fish` for persistent completion.
 
 ## Example
 
