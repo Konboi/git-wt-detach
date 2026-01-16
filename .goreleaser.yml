@@ -1,0 +1,44 @@
+version: 2
+
+project_name: git-wt-detach
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: ./cmd/git-wt-detach
+    binary: git-wt-detach
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+brews:
+  - repository:
+      owner: Konboi
+      name: homebrew-tap
+    homepage: https://github.com/Konboi/git-wt-detach
+    description: Temporarily detach a branch checked out in another worktree
+    license: MIT
+    install: |
+      bin.install "git-wt-detach"
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
