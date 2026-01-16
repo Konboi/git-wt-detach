@@ -19,18 +19,9 @@ builds:
       - arm64
 
 archives:
-  - format: tar.gz
+  - formats:
+      - tar.gz
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-
-brews:
-  - repository:
-      owner: Konboi
-      name: homebrew-tap
-    homepage: https://github.com/Konboi/git-wt-detach
-    description: Temporarily detach a branch checked out in another worktree
-    license: MIT
-    install: |
-      bin.install "git-wt-detach"
 
 checksum:
   name_template: 'checksums.txt'
