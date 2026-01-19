@@ -2,6 +2,7 @@ package wtdetach
 
 import (
 	"fmt"
+	"strings"
 )
 
 const (
@@ -110,6 +111,26 @@ func (d *Detacher) HasUncommittedChanges(worktreePath string) bool {
 		return true // Be safe on error
 	}
 	return output != ""
+}
+
+// GetUncommittedFiles returns a list of uncommitted files in a worktree
+func (d *Detacher) GetUncommittedFiles(worktreePath string) []string {
+	output, err := d.git.RunInDir(worktreePath, "status", "--porcelain")
+	if err != nil || output == "" {
+		return nil
+	}
+
+	var files []string
+	for _, line := range strings.Split(output, "\n") {
+		if line == "" {
+			continue
+		}
+		// porcelain format: XY filename (XY is 2 char status)
+		if len(line) > 3 {
+			files = append(files, strings.TrimSpace(line[3:]))
+		}
+	}
+	return files
 }
 
 // CreateBranch creates a new branch at the current HEAD of a worktree

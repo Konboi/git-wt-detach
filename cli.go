@@ -72,7 +72,7 @@ func (c *CLI) runDetach(d *Detacher, opts *Options) error {
 
 	if d.HasUncommittedChanges(wt.Path) {
 		if !opts.Force {
-			return fmt.Errorf("uncommitted changes found in worktree: %s\n  Use --force to override", wt.Path)
+			return formatUncommittedError(wt.Path, d.GetUncommittedFiles(wt.Path))
 		}
 		fmt.Printf("⚠ Warning: Uncommitted changes found in worktree: %s\n", wt.Path)
 	}
@@ -134,7 +134,7 @@ func (c *CLI) runRevert(d *Detacher, opts *Options) error {
 
 	if d.HasUncommittedChanges(wt.Path) {
 		if !opts.Force {
-			return fmt.Errorf("uncommitted changes found in worktree: %s\n  Use --force to override", wt.Path)
+			return formatUncommittedError(wt.Path, d.GetUncommittedFiles(wt.Path))
 		}
 		fmt.Printf("⚠ Warning: Uncommitted changes found in worktree: %s\n", wt.Path)
 	}
@@ -183,4 +183,22 @@ func readYesNo() bool {
 	}
 	input = strings.TrimSpace(strings.ToLower(input))
 	return input == "y" || input == "yes"
+}
+
+func formatUncommittedError(worktreePath string, files []string) error {
+	msg := fmt.Sprintf("uncommitted changes found in worktree: %s", worktreePath)
+
+	if len(files) > 0 {
+		if len(files) > 10 {
+			msg += fmt.Sprintf("\n  %d files or more with uncommitted changes", len(files))
+		} else {
+			msg += "\n  Files:"
+			for _, f := range files {
+				msg += fmt.Sprintf("\n    - %s", f)
+			}
+		}
+	}
+
+	msg += "\n  Use --force to override"
+	return fmt.Errorf("%s", msg)
 }
