@@ -462,3 +462,67 @@ func TestDetach_TempBranchName(t *testing.T) {
 		t.Errorf("TempBranchName with custom suffix: expected feature-x__custom, got %s", name)
 	}
 }
+
+func TestDetach_GetUncommittedFiles(t *testing.T) {
+	repoDir := setupTestRepo(t)
+
+	oldWd, _ := os.Getwd()
+	os.Chdir(repoDir)
+	defer os.Chdir(oldWd)
+
+	d := NewDetacher()
+
+	// No uncommitted files
+	files := d.GetUncommittedFiles(repoDir)
+	if len(files) != 0 {
+		t.Errorf("expected 0 files, got %d", len(files))
+	}
+
+	// Create uncommitted files
+	for i := 0; i < 3; i++ {
+		testFile := filepath.Join(repoDir, "file"+string(rune('a'+i))+".txt")
+		if err := os.WriteFile(testFile, []byte("test\n"), 0644); err != nil {
+			t.Fatalf("failed to create test file: %v", err)
+		}
+	}
+
+	files = d.GetUncommittedFiles(repoDir)
+	if len(files) != 3 {
+		t.Errorf("expected 3 files, got %d: %v", len(files), files)
+	}
+}
+
+func TestFormatUncommittedError(t *testing.T) {
+	// Test with few files
+	err := formatUncommittedError("/path/to/worktree", []string{"file1.txt", "file2.txt"})
+	errMsg := err.Error()
+
+	if !strings.Contains(errMsg, "/path/to/worktree") {
+		t.Errorf("error should contain worktree path: %s", errMsg)
+	}
+	if !strings.Contains(errMsg, "file1.txt") {
+		t.Errorf("error should contain file1.txt: %s", errMsg)
+	}
+	if !strings.Contains(errMsg, "file2.txt") {
+		t.Errorf("error should contain file2.txt: %s", errMsg)
+	}
+	if !strings.Contains(errMsg, "Use --force to override") {
+		t.Errorf("error should contain force hint: %s", errMsg)
+	}
+
+	// Test with more than 10 files
+	manyFiles := make([]string, 15)
+	for i := 0; i < 15; i++ {
+		manyFiles[i] = "file" + string(rune('a'+i)) + ".txt"
+	}
+	err = formatUncommittedError("/path/to/worktree", manyFiles)
+	errMsg = err.Error()
+
+	if !strings.Contains(errMsg, "15 files or more") {
+		t.Errorf("error should mention '15 files or more': %s", errMsg)
+	}
+	// Should NOT list individual files
+	if strings.Contains(errMsg, "filea.txt") {
+		t.Errorf("error should not list individual files when > 10: %s", errMsg)
+	}
+}

@@ -11,13 +11,14 @@ import (
 
 // CLI defines the command-line interface
 type CLI struct {
-	Branch  string           `arg:"" optional:"" help:"Branch name to detach or revert."`
-	DryRun  bool             `help:"Show what would be done without making changes." short:"n"`
-	Revert  bool             `help:"Revert the temporary detach." short:"r"`
-	Force   bool             `help:"Force execution even with uncommitted changes." short:"f"`
-	Yes     bool             `help:"Skip confirmation prompt." short:"y"`
-	Init    string           `help:"Output shell completion script (bash, zsh, fish)." placeholder:"SHELL"`
-	Version kong.VersionFlag `help:"Show version."`
+	Branch   string           `arg:"" optional:"" help:"Branch name to detach or revert."`
+	DryRun   bool             `help:"Show what would be done without making changes." short:"n"`
+	Revert   bool             `help:"Revert the temporary detach." short:"r"`
+	Force    bool             `help:"Force execution even with uncommitted changes." short:"f"`
+	Yes      bool             `help:"Skip confirmation prompt." short:"y"`
+	Checkout bool             `help:"Checkout the branch after detaching." short:"c"`
+	Init     string           `help:"Output shell completion script (bash, zsh, fish)." placeholder:"SHELL"`
+	Version  kong.VersionFlag `help:"Show version."`
 }
 
 // Run executes the CLI command
@@ -82,6 +83,9 @@ func (c *CLI) runDetach(d *Detacher, opts *Options) error {
 	if opts.DryRun {
 		fmt.Printf("would create branch: %s\n", tmpBranch)
 		fmt.Printf("would checkout in worktree: %s\n", wt.Path)
+		if c.Checkout {
+			fmt.Printf("would checkout branch: %s\n", branch)
+		}
 		return nil
 	}
 
@@ -100,6 +104,18 @@ func (c *CLI) runDetach(d *Detacher, opts *Options) error {
 	fmt.Printf("✔ Created temp branch: %s\n", result.TempBranch)
 	fmt.Printf("✔ Switched worktree branch\n")
 	fmt.Printf("✔ Branch detached: %s\n", branch)
+
+	if c.Checkout {
+		currentPath, err := d.GetCurrentWorktreePath()
+		if err != nil {
+			return err
+		}
+		if err := d.Checkout(currentPath, branch); err != nil {
+			return err
+		}
+		fmt.Printf("✔ Checked out: %s\n", branch)
+	}
+
 	return nil
 }
 

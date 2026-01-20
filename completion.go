@@ -82,6 +82,7 @@ complete -c git-wt-detach -s n -l dry-run -d 'Show what would be done without ma
 complete -c git-wt-detach -s r -l revert -d 'Revert the temporary detach'
 complete -c git-wt-detach -s f -l force -d 'Force execution even with uncommitted changes'
 complete -c git-wt-detach -s y -l yes -d 'Skip confirmation prompt'
+complete -c git-wt-detach -s c -l checkout -d 'Checkout the branch after detaching'
 complete -c git-wt-detach -l version -d 'Show version'
 
 # git subcommand completion
