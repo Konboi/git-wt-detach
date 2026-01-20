@@ -58,6 +58,7 @@ git wt-detach <branch> --revert
 | `--force` | Force execution even with uncommitted changes |
 | `--yes` | Skip confirmation prompt |
 | `--revert` | Revert the temporary detach |
+| `--checkout` | Checkout the branch after detaching |
 | `--init` | Output shell completion script (bash, zsh, fish) |
 | `--version` | Show version |
 
@@ -109,6 +110,14 @@ Proceed? [y/N] y
 # Now you can checkout feature-x in the current repository
 $ git checkout feature-x
 
+# Or use --checkout (-c) to detach and checkout in one step
+$ git wt-detach feature-x -c
+✔ Found worktree: ../repo-wt-feature
+✔ Created temp branch: feature-x__wt_detach
+✔ Switched worktree branch
+✔ Branch detached: feature-x
+✔ Checked out: feature-x
+
 # When done, revert to original state
 $ git wt-detach feature-x --revert
 ✔ Found worktree with temp branch: ../repo-wt-feature
@@ -130,6 +139,8 @@ git config wt-detach.suffix "__tmp"
 ## Safety Features
 
 - Fails if the target worktree has uncommitted changes (use `--force` to override)
+  - Shows up to 10 uncommitted files in the error message
+  - Shows "N files or more" when there are more than 10 uncommitted files
 - Fails if the temporary branch already exists
 - Use `--dry-run` to preview changes before execution
 
