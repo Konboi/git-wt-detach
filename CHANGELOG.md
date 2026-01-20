@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.0](https://github.com/Konboi/git-wt-detach/compare/v0.1.3...v0.2.0) - 2026-01-20
+- add checkout (-c) option by @Konboi in https://github.com/Konboi/git-wt-detach/pull/11
+- update doc by @Konboi in https://github.com/Konboi/git-wt-detach/pull/13
+
 ## [v0.1.3](https://github.com/Konboi/git-wt-detach/compare/v0.1.2...v0.1.3) - 2026-01-19
 - to display uncommitted files by @Konboi in https://github.com/Konboi/git-wt-detach/pull/9
 
